@@ -17,28 +17,31 @@ int main(int argc, char*argv[])
   player_id player = 0, quit = 0;
 
   /* initialisation */
-  game_t *game = game_init();
-  gui_t *gui = gui_init(game);
+  game_init();
+  gui_init();
 
   while(!quit)
     {
-      game_start(game);
-      while(!game_over(game))
+      printf("starting a new game\n");
+      game_start();
+      while(!game_over())
 	{
-	  while(gui_player_uses_joker(gui, &joker))
-	    game_use_joker(game, &joker, player);
-	  gui_get_move(gui, &move, player);
-	  game_log_move(game, &mlog, &move);
-	  gui_show_move(gui, &mlog);
-	  game_play_move(game, &move);
+	  printf("in main loop\n");
+	  while(gui_player_uses_joker(&joker))
+	    game_use_joker(&joker, player);
+	  gui_get_move(&move, player);
+	  game_log_move(&mlog, &move);
+	  gui_show_move(&mlog);
+	  game_play_move(&move);
 	  player = player_next(player);
 	}
-      quit = gui_wannaplayagain(gui);
+      printf("game ended\n");
+      quit = !gui_wannaplayagain();
     }
 
   /* freeing resources */
-  gui_quit(gui);
-  game_quit(game);
+  gui_quit();
+  game_quit();
 
   return EXIT_SUCCESS;
 }

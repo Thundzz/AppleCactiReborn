@@ -29,13 +29,13 @@ struct move_log_s{
 typedef struct move_log_s move_log_t;
 
 
-game_t * game_init();
-int      game_start(game_t * game);
-int      game_over (game_t * game);
-int      game_use_joker(game_t * g, joker_t * j, player_id p);
-int      game_log_move (game_t * g, move_log_t * mlg,  move_t *m);
-int	 game_play_move(game_t * g, move_t * move);
-int	 game_quit(game_t * g);
+int game_init();
+int game_start();
+int game_over ();
+int game_use_joker(joker_t * j, player_id p);
+int game_log_move (move_log_t * mlg,  move_t *m);
+int game_play_move(move_t * move);
+int game_quit();
 	
 
 

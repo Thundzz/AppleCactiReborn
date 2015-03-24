@@ -1,31 +1,38 @@
 #include "game.h"
 
-game_t * game_init(){
+int game_init(){
+  return 0;
 }
 
 
-int game_start(game_t * game){
+int game_start(){
+  return 0;
 }
 
 
-int game_over (game_t * game){
+int game_over (){
+  return 1;
 }
 
 
-int game_use_joker(game_t * g, joker_t * j, player_id p){
-}
-
-
-
-int game_log_move (game_t * g, move_log_t * mlg,  move_t *m){
-}
-
-
-
-int game_play_move(game_t * g, move_t * move){
+int game_use_joker(joker_t * j, player_id p){
+  return 0;
 }
 
 
 
-int game_quit(game_t * g){
+int game_log_move (move_log_t * mlg,  move_t *m){
+  return 0;
+}
+
+
+
+int game_play_move(move_t * move){
+  return 0;
+}
+
+
+
+int game_quit(){
+  return 0;
 }
