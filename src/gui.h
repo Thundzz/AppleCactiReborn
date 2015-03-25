@@ -3,6 +3,8 @@
 
 #include "game.h"
 
+enum{GUI_OK, GUI_ERROR = -1};
+
 int gui_init();
 int gui_player_uses_joker(joker_t *joker);
 int gui_get_move(move_t * move, player_id player);

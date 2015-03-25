@@ -16,7 +16,7 @@
 #define JOKER_PATH IMG_PATH "joker/"
 #define FONT_PATH RES_PATH "font/font.ttf"
 
-
+typedef enum{TTF, SDL} lib;
 
 typedef struct{
   SDL_Rect board, p1, p2, status, current_player, msg;
@@ -40,6 +40,11 @@ typedef struct gui_s
 
 static gui_t gui;
 
+void gui_perror(const char * msg, lib l)
+{
+  fprintf(stderr, "Error: %s: %s\n", msg, (l == TTF) ? TTF_GetError() : SDL_GetError());
+}
+
 void gui_compute_positions()
 {
   /* todo use ratios to define every position from screen->h/w */
@@ -53,45 +58,76 @@ void gui_compute_positions()
 
 int gui_init()
 {
-  char buf[256];
-  SDL_Init(SDL_INIT_VIDEO);
+  if(SDL_Init(SDL_INIT_VIDEO) == -1)
+    {
+      gui_perror("Failed to init SDL", SDL);
+      return GUI_ERROR;
+    }
   gui.screen = SDL_SetVideoMode(800, 600, 32, SDL_DOUBLEBUF | SDL_RESIZABLE);
+  if(gui.screen == NULL)
+    {
+      gui_perror("Failed to create a window", SDL);
+      return GUI_ERROR;
+    }
   SDL_FillRect(gui.screen, NULL, BGCOLOR);
+  /*Following code to be uncommented when images are added*/
+  /*
+  char buf[256];
   for(int i =0; i < NB_SQUARE_CONTENT; ++i)
     {
       sprintf(buf, SQUARE_PATH "%d.bmp", i);
       gui.img.square[i] = SDL_LoadBMP(buf);
+      if(gui.img.square[i] == NULL)
+	{
+	  gui_perror("At loading", SDL);
+	  return GUI_ERROR;
+	}
     }
   for(int i =0; i < NB_JOKER; ++i)
     {
       sprintf(buf, JOKER_PATH "%d.bmp", i);
       gui.img.joker[i] = SDL_LoadBMP(buf);
+      if(gui.img.joker[i] == NULL)
+	{
+	  gui_perror("At loading", SDL);
+	  return GUI_ERROR;
+	}
+     }
+  */
+  if(TTF_Init() == -1)
+    {
+      gui_perror("Failed to init SDL_TTF", TTF);
+      return GUI_ERROR;
     }
-  TTF_Init();
   gui.text.font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
-  puts(TTF_GetError());
+  if(gui.text.font == NULL)
+    {
+      gui_perror(FONT_PATH, TTF);
+      return GUI_ERROR;
+    }
   gui.text.color.r = gui.text.color.g = gui.text.color.b = 0;
   gui.info.msg = gui.info.status = NULL;
   gui_compute_positions();
   gui_info("New game.");
-  return 0;
+  return GUI_OK;
 }
 
 int gui_player_uses_joker(joker_t * joker)
 {
-  return 0;
+  return GUI_OK;
 }
 
 int gui_get_move(move_t * move, player_id player)
 {
-  return 0;
+  return GUI_OK;
 }
 
 int gui_show_move(move_log_t * mlog)
 {
-  return 0;
+  return GUI_OK;
 }
 
+/*returns a boolean. change should be considered: this blocks error handling.*/
 int gui_wannaplayagain()
 {
   gui_info("Play again ? (Y/n)");
@@ -121,7 +157,7 @@ int gui_wannaplayagain()
 	    }
 	}
     }
-  return 0;
+  return GUI_OK;
 }
 
 int gui_info(char *msg)
@@ -132,14 +168,19 @@ int gui_info(char *msg)
       SDL_FillRect(gui.screen, &gui.absp.msg, BGCOLOR);
     }
   gui.info.msg = TTF_RenderText_Solid(gui.text.font, msg, gui.text.color);
+  if(gui.info.msg == NULL)
+    {
+      gui_perror("Failed to render text with SDL_TTF", TTF);
+      return GUI_ERROR;
+    }
   SDL_BlitSurface(gui.info.msg, NULL, gui.screen, &gui.absp.msg);
   SDL_Flip(gui.screen);
-  return 0;
+  return GUI_OK;
 }
 
 int gui_status(char *msg)
 {
-  return 0;
+  return GUI_OK;
 }
 
 int gui_quit()
@@ -155,5 +196,5 @@ int gui_quit()
   TTF_CloseFont(gui.text.font);
   TTF_Quit();
   SDL_Quit();
-  return 0;
+  return GUI_OK;
 }
