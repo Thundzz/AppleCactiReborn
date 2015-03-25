@@ -1,25 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "gui.h"
+#include "common.h"
+#include "player.h"
 #include "game.h"
-
-
-player_id player_next(int current)
-{
-  return 1-current;
-}
+#include "gui.h"
 
 int main(int argc, char*argv[])
 {
   move_t move;
-  move_log_t mlog;
   joker_t joker;
-  player_id player = 0, quit = 0;
+  int quit = 0;
+  player_t * p;
 
   /* initialisation */
   game_init();
   gui_init();
-
+  player_init(NB_PLAYER, HUMAN, HUMAN);
   while(!quit)
     {
       printf("starting a new game\n");
@@ -27,13 +23,12 @@ int main(int argc, char*argv[])
       while(!game_over())
 	{
 	  printf("in main loop\n");
-	  while(gui_player_uses_joker(&joker))
-	    game_use_joker(&joker, player);
-	  gui_get_move(&move, player);
-	  game_log_move(&mlog, &move);
-	  gui_show_move(&mlog);
+	  p = player_next();
+	  while(player_uses_joker(p, &joker))
+	    game_use_joker(&joker, p);
+	  player_get_move(p, &move);
 	  game_play_move(&move);
-	  player = player_next(player);
+	  p = player_next();
 	}
       printf("game ended\n");
       quit = !gui_wannaplayagain();

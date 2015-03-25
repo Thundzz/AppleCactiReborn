@@ -1,3 +1,5 @@
+#include "common.h"
+#include "player.h"
 #include "game.h"
 
 int game_init(){
@@ -15,17 +17,9 @@ int game_over (){
 }
 
 
-int game_use_joker(joker_t * j, player_id p){
+int game_use_joker(joker_t * j){
   return 0;
 }
-
-
-
-int game_log_move (move_log_t * mlg,  move_t *m){
-  return 0;
-}
-
-
 
 int game_play_move(move_t * move){
   return 0;

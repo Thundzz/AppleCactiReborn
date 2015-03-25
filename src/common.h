@@ -15,4 +15,12 @@ typedef enum{
   TOP, RIGHT, BOTTOM, LEFT
 } direction_t;
 
+
+struct move_s{
+  int stub;
+};
+typedef struct move_s move_t;
+
+typedef int player_id;
+
 #endif
