@@ -1,9 +1,9 @@
 #include <stdarg.h>
 #include <stdio.h>
-#include "common.h"
+#include "../common.h"
 #include "game.h"
 #include "player.h"
-#include "gui.h"
+#include "../gui/gui.h"
 
 struct player_s
 {

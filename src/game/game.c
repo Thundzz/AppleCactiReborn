@@ -1,4 +1,4 @@
-#include "common.h"
+#include "../common.h"
 #include "player.h"
 #include "game.h"
 

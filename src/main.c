@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "common.h"
-#include "player.h"
-#include "game.h"
-#include "gui.h"
+#include "game/player.h"
+#include "game/game.h"
+#include "gui/gui.h"
 
 int main(int argc, char*argv[])
 {
@@ -25,7 +25,7 @@ int main(int argc, char*argv[])
 	  printf("in main loop\n");
 	  p = player_next();
 	  while(player_uses_joker(p, &joker))
-	    game_use_joker(&joker, p);
+	    game_use_joker(&joker);
 	  player_get_move(p, &move);
 	  game_play_move(&move);
 	  p = player_next();
