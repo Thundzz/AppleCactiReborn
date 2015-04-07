@@ -4,7 +4,7 @@
 #include "game.h"
 #include "player.h"
 #include "../gui/gui.h"
-
+#include "../texts.h"
 struct player_s
 {
   int (*get_move)(move_t *, player_id);
@@ -64,7 +64,7 @@ void player_init(int howmany, ...)
 	  player_init_human(player+i);
 	  break;
 	default:
-	  fprintf(stderr, "Failed to init a player of type %d.\n", itype);
+	  fprintf(stderr, INVALID_PLAYER_TYPE, itype);
 	}
     }
   va_end(ap);

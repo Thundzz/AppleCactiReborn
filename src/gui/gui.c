@@ -4,8 +4,7 @@
 #include "../common.h"
 #include "gui.h"
 #include "../game/game.h"
-
-
+#include "../texts.h"
 #define DEFAULT_W 800
 #define DEFAULT_H 600
 #define FONT_SIZE 20
@@ -42,7 +41,16 @@ static gui_t gui;
 
 void gui_perror(const char * msg, lib l)
 {
-  fprintf(stderr, "Error: %s: %s\n", msg, (l == TTF) ? TTF_GetError() : SDL_GetError());
+  fprintf(stderr, ERROR, msg, (l == TTF) ? TTF_GetError() : SDL_GetError());
+}
+
+gui_draw_board()
+{
+}
+
+gui_draw()
+{
+  gui_draw_board();
 }
 
 void gui_compute_positions()
@@ -66,7 +74,7 @@ int gui_init()
   gui.screen = SDL_SetVideoMode(800, 600, 32, SDL_DOUBLEBUF | SDL_RESIZABLE);
   if(gui.screen == NULL)
     {
-      gui_perror("Failed to create a window", SDL);
+      gui_perror(SDL_INIT_FAILURE, SDL);
       return GUI_ERROR;
     }
   SDL_FillRect(gui.screen, NULL, BGCOLOR);
@@ -79,7 +87,7 @@ int gui_init()
       gui.img.square[i] = SDL_LoadBMP(buf);
       if(gui.img.square[i] == NULL)
 	{
-	  gui_perror("At loading", SDL);
+	  gui_perror(AT_LOADING, SDL);
 	  return GUI_ERROR;
 	}
     }
@@ -89,14 +97,14 @@ int gui_init()
       gui.img.joker[i] = SDL_LoadBMP(buf);
       if(gui.img.joker[i] == NULL)
 	{
-	  gui_perror("At loading", SDL);
+	  gui_perror(AT_LOADING, SDL);
 	  return GUI_ERROR;
 	}
      }
   */
   if(TTF_Init() == -1)
     {
-      gui_perror("Failed to init SDL_TTF", TTF);
+      gui_perror(SDL_TTF_INIT_FAILURE, TTF);
       return GUI_ERROR;
     }
   gui.text.font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
@@ -108,7 +116,7 @@ int gui_init()
   gui.text.color.r = gui.text.color.g = gui.text.color.b = 0;
   gui.info.msg = gui.info.status = NULL;
   gui_compute_positions();
-  gui_info("New game.");
+  gui_info(NEW_GAME);
   return GUI_OK;
 }
 
@@ -125,7 +133,7 @@ int gui_get_move(move_t * move, player_id player)
 /*returns a boolean. change should be considered: this blocks error handling.*/
 int gui_wannaplayagain()
 {
-  gui_info("Play again ? (Y/n)");
+  gui_info(PLAY_AGAIN);
   SDL_Event event;
   for(;;)
     {
@@ -157,16 +165,19 @@ int gui_wannaplayagain()
 
 int gui_info(char *msg)
 {
-  if(gui.info.msg != NULL)
+  if(msg != NULL)
     {
-      SDL_FreeSurface(gui.info.msg);
-      SDL_FillRect(gui.screen, &gui.absp.msg, BGCOLOR);
-    }
-  gui.info.msg = TTF_RenderText_Solid(gui.text.font, msg, gui.text.color);
-  if(gui.info.msg == NULL)
-    {
-      gui_perror("Failed to render text with SDL_TTF", TTF);
-      return GUI_ERROR;
+      if(gui.info.msg != NULL)
+	{
+	  SDL_FreeSurface(gui.info.msg);
+	  SDL_FillRect(gui.screen, &gui.absp.msg, BGCOLOR);
+	}
+      gui.info.msg = TTF_RenderText_Solid(gui.text.font, msg, gui.text.color);
+      if(gui.info.msg == NULL)
+	{
+	  gui_perror(RENDER_TEXT_FAILED, TTF);
+	  return GUI_ERROR;
+	}
     }
   SDL_BlitSurface(gui.info.msg, NULL, gui.screen, &gui.absp.msg);
   SDL_Flip(gui.screen);

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../common.h"
 #include "cursor.h"
-
+#include "../texts.h"
 int cursor_1d_getnext_incr(cursor_1d_t *this)
 {
   return *(this->i) - 1;
@@ -104,7 +104,7 @@ void cursor_new(cursor_t *dst, direction_t direction, int *i, int *j, int board_
       cursor_left(dst, i, j, board_size);
       break;
     default:
-      fprintf(stderr, "tried to initialize a cursor with a bad direction\n");
+      fprintf(stderr, ERROR_YOUDONWANNANO);
       break;
     }
 }
