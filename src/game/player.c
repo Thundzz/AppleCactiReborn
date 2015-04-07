@@ -58,6 +58,7 @@ void player_init(int howmany, ...)
 	{
 	case HUMAN:
 	  player_init_human(player+i);
+	  break;
 	default:
 	  fprintf(stderr, "Failed to init a player of type %d.\n", itype);
 	}
