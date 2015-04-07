@@ -4,20 +4,31 @@
 #define NB_PLAYER 2
 
 typedef enum{
-  VOID, EMPTY, APPLE, CACTUS, TRAP, NB_SQUARE_CONTENT
-} square_content_t;
+  VOID, //this tile has been destroyed
+  EMPTY,
+  APPLE,
+  CACTUS,
+  TRAP,
+  NB_TILE_CONTENT
+} tile_content_t;
 
 typedef enum{
-  CHARGE, PROCRASTINATION, CORRUPTION, STEAMROLLER, TRAP_J, REINFORCEMENT, NB_JOKER
+  JOKER_CHARGE,
+  JOKER_PROCRASTINATION,
+  JOKER_CORRUPTION,
+  JOKER_STEAMROLLER,
+  JOKER_TRAP,
+  JOKER_REINFORCEMENT,
+  NB_JOKER
 } joker_t;
 
 typedef enum{
-  TOP, RIGHT, BOTTOM, LEFT
+  UP, RIGHT, DOWN, LEFT, NB_DIRECTION
 } direction_t;
 
 
 struct move_s{
-  int stub;
+  direction_t direction;
 };
 typedef struct move_s move_t;
 

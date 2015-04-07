@@ -1,78 +1,110 @@
-#include "direction.h"
+#include <stdio.h>
+#include "../common.h"
+#include "cursor.h"
 
-int direction_1d_incr(int i)
+int cursor_1d_getnext_incr(cursor_1d_t *this)
 {
-  return i+1;
+  return *(this->i) - 1;
 }
-int direction_1d_decr(int i)
+
+int cursor_1d_getnext_decr(cursor_1d_t *this)
 {
-  return i-1;
+  return *(this-> i) - 1;
 }
-int direction_1d_begin(int board_size)
+
+void cursor_1d_next(cursor_1d_t *this)
+{
+  *(this->i) = this->getnext(this);
+}
+
+int _begin()
 {
   return 0;
 }
-int direction_1d_rbegin(int board_size)
+
+int _rbegin(int board_size)
 {
   return board_size - 1;
 }
 
-int direction_1d_end(int board_size)
+int _end(int board_size)
 {
   return board_size;
 }
-int direction_1d_rend(int board_size)
+
+int _rend()
 {
   return -1;
 }
 
-void direction_1d_left(direction_1d_t *dst)
+int cursor_1d_end(cursor_1d_t *this)
 {
-  dst->begin = direction_1d_begin;
-  dst->end = direction_1d_end;
-  dst->next = direction_1d_incr;
-}
-void direction_1d_right(direction_1d_t *dst)
-{
-  dst->begin = direction_1d_rbegin;
-  dst->end = direction_1d_rend;
-  dst->next = direction_1d_decr;
+  return *(this->i) == this->bound;
 }
 
-
-int innermost_i(int i, int j, int size)
+void cursor_1d_common(cursor_1d_t *dst, int *i)
 {
-  return j*size+i;
+ dst->i = i;
+ dst->next = cursor_1d_next;
+ dst->end = cursor_1d_end;
 }
 
-int innermost_j(int i, int j, int size)
+void cursor_1d_left(cursor_1d_t *dst, int *i, int board_size)
 {
-  return i*size+j;
+  cursor_1d_common(dst, i);
+  dst->bound = _end(board_size);
+  *(dst->i) = _begin();
+  dst->getnext = cursor_1d_getnext_incr;
 }
+void cursor_1d_right(cursor_1d_t *dst, int *i, int board_size)
+{
+  cursor_1d_common(dst, i);
+  dst->bound = _rend();
+  *(dst->i)= _rbegin(board_size);
+  dst->getnext = cursor_1d_getnext_decr;
+}
+
 /* (0,0) top left ; (max, max) bottom right */
 
-void direction_left(direction_t *dst)
+void cursor_left(cursor_t *dst, int *i, int *j, int board_size)
 {
-  direction_1d_right(&dst->i);
-  direction_1d_left(&dst->j);
-  dst->plain_index = innermost_i;
+  cursor_1d_right(&dst->i, j, board_size);
+  cursor_1d_left (&dst->j, i, board_size);
 }
-void direction_up(direction_t *dst)
+void cursor_up(cursor_t *dst, int *i, int *j, int board_size)
 {
-  direction_1d_right(&dst->i);
-  direction_1d_right(&dst->j);
-  dst->plain_index = innermost_j;
+  cursor_1d_right(&dst->i, i, board_size);
+  cursor_1d_right(&dst->j, j, board_size);
 }
-void direction_right(direction_t *dst)
+void cursor_right(cursor_t *dst, int *i, int *j, int board_size)
 {
-  direction_1d_left(&dst->i);
-  direction_1d_right(&dst->j);
-  dst->plain_index = innermost_i;
+  cursor_1d_left (&dst->i, j, board_size);
+  cursor_1d_right(&dst->j, i, board_size);
 }
-void direction_down(direction_t *dst)
+void cursor_down(cursor_t *dst, int *i, int*j, int board_size)
 {
-  direction_1d_left(&dst->i);
-  direction_1d_left(&dst->j);
-  dst->plain_index = innermost_j;
+  cursor_1d_left(&dst->i, i, board_size);
+  cursor_1d_left(&dst->j, j, board_size);
 }
 
+void cursor_new(cursor_t *dst, direction_t direction, int *i, int *j, int board_size)
+{
+  switch(direction)
+    {
+    case UP:
+      cursor_up(dst, i, j, board_size);
+      break;
+    case DOWN:
+      cursor_down(dst, i, j, board_size);
+      break;
+    case RIGHT:
+      cursor_right(dst, i, j, board_size);
+      break;
+    case LEFT:
+      cursor_left(dst, i, j, board_size);
+      break;
+    default:
+      fprintf(stderr, "tried to initialize a cursor with a bad direction\n");
+      break;
+    }
+}

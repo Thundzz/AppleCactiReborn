@@ -1,21 +1,26 @@
-#ifndef _DIRECTION_H_
-#define _DIRECTION_H_
+#ifndef _CURSOR_H_
+#define _CURSOR_H_
 
-typedef struct direction_1d_s
+/* a cursor abstraction to visit the board in some direction*/
+
+typedef struct cursor_1d_s
 {
-  int (*begin)(int board_size), (*end)(int board_size); /*be very careful, as the index can be increasing or decreasing, use index != end and not index < end*/
-  int (*next)(int i);
-} direction_1d_t;
+  int *i;
+  int bound;
+  int     (*end)(struct cursor_1d_s *this);
+  void   (*next)(struct cursor_1d_s *this);
+  int (*getnext)(struct cursor_1d_s *this);
+} cursor_1d_t;
 
-typedef struct direction_s
+typedef struct cursor_s
 {
-  direction_1d_t i, j;
-  int (*plain_index)(int i, int j, int board_size);
-} direction_t;
+  cursor_1d_t i, j;
+} cursor_t;
 
-void direction_up(direction_t *dst);
-void direction_right(direction_t *dst);
-void direction_down(direction_t *dst);
-void direction_left(direction_t *dst);
+void    cursor_up(cursor_t *dst, int *i, int *j, int board_size);
+void cursor_right(cursor_t *dst, int *i, int *j, int board_size);
+void  cursor_down(cursor_t *dst, int *i, int *j, int board_size);
+void  cursor_left(cursor_t *dst, int *i, int *j, int board_size);
 
+void cursor_new(cursor_t *dst,  direction_t ld, int *i, int *j, int board_size);
 #endif 

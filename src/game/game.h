@@ -7,10 +7,8 @@
    order to prevent the compiler from whining.
    TODO: Fill them with real content. 
 */
+#define BOARD_SIZE 8
 
-struct game_s{
-  int stub;
-};
 typedef struct game_s game_t;
 
 

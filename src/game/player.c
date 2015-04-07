@@ -12,8 +12,12 @@ struct player_s
 };
 
 static player_t player[NB_PLAYER];
-int current_player_id = 0;
+static int current_player_id = 0;
 
+int current_player_pawn()
+{
+  return current_player_id ? CACTUS : APPLE;
+}
 int player_get_move(player_t * p, move_t *m)
 {
   return p->get_move(m, player_get_id(p));

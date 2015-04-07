@@ -12,7 +12,7 @@
 #define BGCOLOR 0x128f52
 #define RES_PATH "../res/"
 #define IMG_PATH RES_PATH "img/"
-#define SQUARE_PATH IMG_PATH "square/"
+#define TILE_PATH IMG_PATH "square/"
 #define JOKER_PATH IMG_PATH "joker/"
 #define FONT_PATH RES_PATH "font/font.ttf"
 
@@ -31,7 +31,7 @@ typedef struct gui_s
   gui_absolute_positions_t absp;
   gui_relative_positions_t relp;
   SDL_Surface *screen;
-  struct{SDL_Surface *square[NB_SQUARE_CONTENT];
+  struct{SDL_Surface *square[NB_TILE_CONTENT];
     SDL_Surface *score[NB_PLAYER];
     SDL_Surface *joker[NB_JOKER];} img;
   struct{TTF_Font *font; SDL_Color color;} text;
@@ -73,9 +73,9 @@ int gui_init()
   /*Following code to be uncommented when images are added*/
   /*
   char buf[256];
-  for(int i =0; i < NB_SQUARE_CONTENT; ++i)
+  for(int i =0; i < NB_TILE_CONTENT; ++i)
     {
-      sprintf(buf, SQUARE_PATH "%d.bmp", i);
+      sprintf(buf, TILE_PATH "%d.bmp", i);
       gui.img.square[i] = SDL_LoadBMP(buf);
       if(gui.img.square[i] == NULL)
 	{
@@ -180,9 +180,9 @@ int gui_status(char *msg)
 
 int gui_quit()
 {
-  for(int i = 0; i < NB_SQUARE_CONTENT; ++i)
+  for(int i = 0; i < NB_TILE_CONTENT; ++i)
     SDL_FreeSurface(gui.img.square[i]);
-  for(int i = 0; i < NB_SQUARE_CONTENT; ++i)
+  for(int i = 0; i < NB_TILE_CONTENT; ++i)
     SDL_FreeSurface(gui.img.joker[i]);
   if(gui.info.msg != NULL)
     SDL_FreeSurface(gui.info.msg);
