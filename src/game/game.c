@@ -1,7 +1,9 @@
+#include <stdio.h>
 #include "../common.h"
 #include "player.h"
 #include "game.h"
 #include "cursor.h"
+#include "../texts.h"
 
 static struct{
   int size;
@@ -24,10 +26,34 @@ int game_over (){
 
 
 int game_use_joker(joker_t * j){
+  move_t move;
+  switch(j->type)
+    {
+    case JOKER_CHARGE:
+      move.direction = j->joker.charge.direction;
+      game_play_move(&move);
+      game_play_move(&move);
+      //no break, following code common to charge and procrastination
+    case JOKER_PROCRASTINATION:
+      player_next();
+      break;
+    case JOKER_CORRUPTION:
+      break;
+    case JOKER_STEAMROLLER:
+      break;
+    case JOKER_TRAP:
+      break;
+    case JOKER_REINFORCEMENT:
+      break;
+    default:
+      fputs(ERROR_YOUDONWANNANO, stderr);
+      break;
+    }
   return 0;
 }
 
-int tile_not_empty(tile_content_t t)
+/* used to determine when to remove a column/line (if there's no pawn on it) */
+int tile_not_empty(tile_content_t t) 
 {
   return t == APPLE || t == CACTUS;
 }
@@ -66,12 +92,17 @@ int game_play_move(move_t * move){
     {
       for(; !cursor.j.end(&cursor.j); cursor.j.next(&cursor.j))
 	{
-	  if(board.board[i][j] == VOID)
+	  if(board.board[i][j] == TRAP)
+	    {
+	      board.board[i][j] = VOID;
+	      ; //animation : trap revealed
+	    }
+	  if (board.board[i][j] == VOID)
 	    {
 	      //any incoming thing falls in the distorted void
 	      if (tmp[j] != EMPTY)
 		{
-		  //falling animation?
+		  ;//falling animation
 		  tmp[j] = EMPTY;
 		}
 	    }

@@ -14,7 +14,7 @@ struct player_s
 static player_t player[NB_PLAYER];
 static int current_player_id = 0;
 
-int current_player_pawn()
+tile_content_t current_player_pawn()
 {
   return current_player_id ? CACTUS : APPLE;
 }
@@ -22,7 +22,7 @@ int player_get_move(player_t * p, move_t *m)
 {
   return p->get_move(m, player_get_id(p));
 }
-player_t *player_next()
+void player_next()
 {
 #if NB_PLAYER == 2
   //neat optimization for higher performance
@@ -34,7 +34,9 @@ player_t *player_next()
   if(current_player_id == NB_PLAYERS)
     current_player_id = 0;
 #endif
-
+}
+player_t *player_current()
+{
   return player + current_player_id;
 }
 int player_uses_joker(player_t *p, joker_t *joker)
