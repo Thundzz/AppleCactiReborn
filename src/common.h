@@ -1,6 +1,7 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
+#define UNUSED(X) (void) (X);
 #define NB_PLAYER 2
 
 /* ISO C does not allow empty structs. therefore, if nothing is needed in a struct,

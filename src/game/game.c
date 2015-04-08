@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "../common.h"
+#include "../texts.h"
 #include "player.h"
 #include "game.h"
 #include "cursor.h"
-#include "../texts.h"
+#include "joker.h"
 
 static struct{
   int size;
@@ -13,6 +14,7 @@ static struct{
 static game_t game;
 
 int game_init(){
+  joker_init();
   return 0;
 }
 
@@ -56,52 +58,7 @@ void destroy_empty_edges()
 }
 
 int game_use_joker(joker_t * j){
-  move_t move;
-  position_t *position;
-  switch(j->type)
-    {
-    case JOKER_CHARGE:
-      move.direction = j->joker.charge.direction;
-      game_play_move(&move);
-      game_play_move(&move);
-      //no break, following code common to charge and procrastination
-    case JOKER_PROCRASTINATION:
-      player_next();
-      break;
-    case JOKER_CORRUPTION:
-      position = &j->joker.corruption.position;
-      tile_t * target = &game.board[position->i][position->j];
-      // check the position is valid. An externally developped IA might 
-      // try to corrupt something else than an opponent pawn.
-      if(tile_get_content(target) == current_opponent_pawn())
-	{
-	  tile_set_content(target, current_player_pawn());
-	  ; //animation : transformation of the pawn
-	}
-      else
-	invalid_move();
-      break;
-    case JOKER_STEAMROLLER:
-      for(int i = 0; i < BOARD_SIZE; ++i)
-	{
-	  ; // animation : a steamroller crosses row j of the board
-	  tile_steamroll(&game.board[i][j->joker.steamroller.j]);
-	}
-      //this might result in an empty row/column on the edges
-      destroy_empty_edges();
-      break;
-    case JOKER_TRAP:
-      position = &j->joker.trap.position;
-      if(!tile_set_trap(&game.board[position->i][position->j]))
-	invalid_move();
-      break;
-    case JOKER_REINFORCEMENT:
-      break;
-    default:
-      fputs(ERROR_YOUDONWANNANO, stderr);
-      break;
-    }
-  return 0;
+  return joker_handle(j, &game);
 }
 
 int game_play_move(move_t * move){
