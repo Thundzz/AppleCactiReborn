@@ -7,3 +7,4 @@
 #define RENDER_TEXT_FAILED "Failed to render text with SDL_TTF"
 #define INVALID_PLAYER_TYPE "Failed to init a player of type %d.\n"
 #define ERROR_YOUDONWANNANO "Something went wrong."
+#define INVALID_MOVE "A player tried to play a forbidden move."

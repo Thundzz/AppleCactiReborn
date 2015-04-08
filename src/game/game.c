@@ -27,6 +27,7 @@ int game_over (){
 
 int game_use_joker(joker_t * j){
   move_t move;
+  position_t *position;
   switch(j->type)
     {
     case JOKER_CHARGE:
@@ -38,6 +39,18 @@ int game_use_joker(joker_t * j){
       player_next();
       break;
     case JOKER_CORRUPTION:
+      position = &j->joker.corruption.position;
+      // check the position is valid. An externally developped IA might 
+      // try to corrupt something else than an opponent pawn.
+      if(board.board[position->i][position->j] == current_opponent_pawn())
+	board.board[position->i][position->j] = current_player_pawn();
+      else
+	{
+	  fputs(INVALID_MOVE, stderr);
+	  // the current player made an invalid move (likely a bug). His opponent wins.
+	  //TODO
+	  ;
+	}
       break;
     case JOKER_STEAMROLLER:
       break;

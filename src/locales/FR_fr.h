@@ -7,3 +7,4 @@
 #define RENDER_TEXT_FAILED "Echec du rendu du texte avec SDL_TTF"
 #define INVALID_PLAYER_TYPE "Echec de la création d'un joueur de type %d.\n"
 #define ERROR_YOUDONWANNANO "Erreur inopinée."
+#define INVALID_MOVE "Un joueur a tenté de jouer un coup interdit."
