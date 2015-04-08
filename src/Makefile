@@ -5,8 +5,8 @@ CFLAGS_RELEASE= -O3
 LIBS= -lSDL -lSDL_ttf
 CFLAGS= -pedantic -W -Wall -std=c99 $(CFLAGS_DEBUG)
 
-OBJS=main.o gui/gui.o game/game.o game/player.o game/cursor.o
-OBJnames=main.o gui.o game.o player.o cursor.o
+OBJS=main.o gui/gui.o game/game.o game/player.o game/cursor.o game/tile.o
+OBJnames=main.o gui.o game.o player.o cursor.o tile.o
 BIN= applecacti.exe
 
 
