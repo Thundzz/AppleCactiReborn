@@ -10,8 +10,8 @@
 #define FONT_SIZE 20
 #define BGCOLOR 0x128f52
 #define RES_PATH "../res/"
-#define IMG_PATH RES_PATH "img/"
-#define TILE_PATH IMG_PATH "square/"
+#define IMG_PATH RES_PATH "images/"
+#define TILE_PATH IMG_PATH "tile/"
 #define JOKER_PATH IMG_PATH "joker/"
 #define FONT_PATH RES_PATH "font/font.ttf"
 
@@ -29,8 +29,8 @@ typedef struct gui_s
 {
   gui_absolute_positions_t absp;
   gui_relative_positions_t relp;
-  SDL_Surface *screen;
-  struct{SDL_Surface *square[NB_TILE_CONTENT];
+  SDL_Surface *screen, *board;
+  struct{SDL_Surface *tile[NB_TILE_CONTENT];
     SDL_Surface *score[NB_PLAYER];
     SDL_Surface *joker[NB_JOKER];} img;
   struct{TTF_Font *font; SDL_Color color;} text;
@@ -44,13 +44,28 @@ void gui_perror(const char * msg, lib l)
   fprintf(stderr, ERROR, msg, (l == TTF) ? TTF_GetError() : SDL_GetError());
 }
 
-gui_draw_board()
+void gui_draw_board()
 {
+  SDL_Rect pos;
+  pos.x = pos.w = pos.y = 0;
+  game_t *game = game_get();
+  for(int i=0; i<BOARD_SIZE; ++i)
+    {
+      pos.y = 0;
+      for(int j=0; j<BOARD_SIZE; ++j)
+	{
+	  SDL_BlitSurface(gui.img.tile[tile_get_content(&(game->board)[i][j])], NULL, gui.board, &pos);
+	  pos.y += gui.img.tile[0]->h + 1;
+	}
+      pos.x += gui.img.tile[0]->w + 1;
+    }
+  SDL_BlitSurface(gui.board, NULL, gui.screen, &gui.absp.board);
 }
 
-gui_draw()
+void gui_draw()
 {
   gui_draw_board();
+  SDL_Flip(gui.screen);
 }
 
 void gui_compute_positions()
@@ -62,13 +77,17 @@ void gui_compute_positions()
   gui.absp.msg.y = h-TTF_FontHeight(gui.text.font);
   gui.absp.msg.w = w;
   gui.absp.msg.h = TTF_FontHeight(gui.text.font);
+  gui.absp.board.x = 0;
+  gui.absp.board.y = 0;
+  gui.absp.board.w = gui.board->w;
+  gui.absp.board.h = gui.board->w;
 }
 
 int gui_init()
 {
   if(SDL_Init(SDL_INIT_VIDEO) == -1)
     {
-      gui_perror("Failed to init SDL", SDL);
+      gui_perror(SDL_INIT_FAILURE, SDL);
       return GUI_ERROR;
     }
   gui.screen = SDL_SetVideoMode(800, 600, 32, SDL_DOUBLEBUF | SDL_RESIZABLE);
@@ -78,19 +97,25 @@ int gui_init()
       return GUI_ERROR;
     }
   SDL_FillRect(gui.screen, NULL, BGCOLOR);
-  /*Following code to be uncommented when images are added*/
-  /*
   char buf[256];
   for(int i =0; i < NB_TILE_CONTENT; ++i)
     {
       sprintf(buf, TILE_PATH "%d.bmp", i);
-      gui.img.square[i] = SDL_LoadBMP(buf);
-      if(gui.img.square[i] == NULL)
+      gui.img.tile[i] = SDL_LoadBMP(buf);
+      if(gui.img.tile[i] == NULL)
 	{
 	  gui_perror(AT_LOADING, SDL);
 	  return GUI_ERROR;
 	}
     }
+  gui.board = SDL_CreateRGBSurface(SDL_HWSURFACE, BOARD_SIZE * (gui.img.tile[0]->w+1), BOARD_SIZE * (gui.img.tile[0]->h+1), 32, 0, 0, 0, 0);
+  if(gui.board == NULL)
+    {
+      gui_perror(AT_LOADING, SDL);
+      return GUI_ERROR;
+    }
+  /* to be uncommented when jokers are displayed */
+  /*
   for(int i =0; i < NB_JOKER; ++i)
     {
       sprintf(buf, JOKER_PATH "%d.bmp", i);
@@ -117,6 +142,7 @@ int gui_init()
   gui.info.msg = gui.info.status = NULL;
   gui_compute_positions();
   gui_info(NEW_GAME);
+  gui_draw();
   return GUI_OK;
 }
 
@@ -133,7 +159,7 @@ int gui_get_move(move_t * move, player_id player)
 /*returns a boolean. change should be considered: this blocks error handling.*/
 int gui_wannaplayagain()
 {
-  gui_info(PLAY_AGAIN);
+  gui_info("Play again ? (Y/n)\n");
   SDL_Event event;
   for(;;)
     {
@@ -176,6 +202,7 @@ int gui_info(char *msg)
       if(gui.info.msg == NULL)
 	{
 	  gui_perror(RENDER_TEXT_FAILED, TTF);
+	  puts(msg);
 	  return GUI_ERROR;
 	}
     }
@@ -192,7 +219,7 @@ int gui_status(char *msg)
 int gui_quit()
 {
   for(int i = 0; i < NB_TILE_CONTENT; ++i)
-    SDL_FreeSurface(gui.img.square[i]);
+    SDL_FreeSurface(gui.img.tile[i]);
   for(int i = 0; i < NB_TILE_CONTENT; ++i)
     SDL_FreeSurface(gui.img.joker[i]);
   if(gui.info.msg != NULL)

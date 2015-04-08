@@ -80,7 +80,7 @@ tile_content_t tile_get_content(tile_t *t)
   if(t->exists)
       return t->content;
   else
-    return VOID;
+    return EMPTY;
 }
 void tile_set_content(tile_t *t, tile_content_t content)
 {

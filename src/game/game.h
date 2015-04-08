@@ -23,5 +23,5 @@ int game_over ();
 int game_use_joker(joker_t * j);
 int game_play_move(move_t * move);
 int game_quit();
-
+game_t * game_get();
 #endif

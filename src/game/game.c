@@ -6,13 +6,12 @@
 #include "cursor.h"
 #include "joker.h"
 
-static struct{
-  int size;
-  tile_content_t board[BOARD_SIZE][BOARD_SIZE]
-    } board = {BOARD_SIZE, {{0}}};
-
 static game_t game;
 
+game_t * game_get()
+{
+  return &game;
+}
 int game_init(){
   joker_init();
   return 0;

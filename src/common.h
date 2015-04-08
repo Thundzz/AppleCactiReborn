@@ -3,7 +3,7 @@
 
 #define UNUSED(X) (void) (X);
 #define NB_PLAYER 2
-
+#define BOARD_SIZE 8
 /* ISO C does not allow empty structs. therefore, if nothing is needed in a struct,
  this macro will be used, declaring an unused element in the structure. */
 #define EMPTY_STRUCT int unused_do_not_remove;
@@ -13,7 +13,6 @@ typedef enum{
 } direction_t;
 
 typedef enum{
-  VOID, //this tile has been destroyed
   EMPTY,
   APPLE,
   CACTUS,
