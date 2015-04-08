@@ -69,7 +69,11 @@ int game_play_move(move_t * move){
 	  if(board.board[i][j] == VOID)
 	    {
 	      //any incoming thing falls in the distorted void
-	      tmp[j] = EMPTY;
+	      if (tmp[j] != EMPTY)
+		{
+		  //falling animation?
+		  tmp[j] = EMPTY;
+		}
 	    }
 	  else if(tmp[j] != EMPTY)
 	    {

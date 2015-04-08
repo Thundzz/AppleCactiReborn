@@ -6,7 +6,7 @@
 typedef struct cursor_1d_s
 {
   int *i;
-  int bound;
+  int _end, _begin;
   int     (*end)(struct cursor_1d_s *this);
   void   (*next)(struct cursor_1d_s *this);
   int (*getnext)(struct cursor_1d_s *this);

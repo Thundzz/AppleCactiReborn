@@ -39,7 +39,13 @@ int _rend()
 
 int cursor_1d_end(cursor_1d_t *this)
 {
-  return *(this->i) == this->bound;
+  if(*(this->i) == this->_end)
+    {
+      *(this->i) = this->_begin;
+      return 1;
+    }
+  else
+    return 0;
 }
 
 void cursor_1d_common(cursor_1d_t *dst, int *i)
@@ -52,15 +58,15 @@ void cursor_1d_common(cursor_1d_t *dst, int *i)
 void cursor_1d_left(cursor_1d_t *dst, int *i, int board_size)
 {
   cursor_1d_common(dst, i);
-  dst->bound = _end(board_size);
-  *(dst->i) = _begin();
+  dst->_end = _end(board_size);
+  *(dst->i) = dst->_begin = _begin();
   dst->getnext = cursor_1d_getnext_incr;
 }
 void cursor_1d_right(cursor_1d_t *dst, int *i, int board_size)
 {
   cursor_1d_common(dst, i);
-  dst->bound = _rend();
-  *(dst->i)= _rbegin(board_size);
+  dst->_end = _rend();
+  *(dst->i)= dst->_begin = _rbegin(board_size);
   dst->getnext = cursor_1d_getnext_decr;
 }
 
