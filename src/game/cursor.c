@@ -72,22 +72,22 @@ void cursor_1d_left(cursor_1d_t *dst, int *i, int board_size)
 
 /* (0,0) top left ; (max, max) bottom right */
 
-void cursor_left(cursor_t *dst, int *i, int *j, int board_size)
+void cursor_down(cursor_t *dst, int *i, int *j, int board_size)
 {
   cursor_1d_right(&dst->i, j, board_size);
   cursor_1d_left (&dst->j, i, board_size);
 }
-void cursor_up(cursor_t *dst, int *i, int *j, int board_size)
+void cursor_right(cursor_t *dst, int *i, int *j, int board_size)
 {
   cursor_1d_right(&dst->i, i, board_size);
   cursor_1d_right(&dst->j, j, board_size);
 }
-void cursor_right(cursor_t *dst, int *i, int *j, int board_size)
+void cursor_up(cursor_t *dst, int *i, int *j, int board_size)
 {
   cursor_1d_left (&dst->i, j, board_size);
   cursor_1d_right(&dst->j, i, board_size);
 }
-void cursor_down(cursor_t *dst, int *i, int*j, int board_size)
+void cursor_left(cursor_t *dst, int *i, int*j, int board_size)
 {
   cursor_1d_left(&dst->i, i, board_size);
   cursor_1d_left(&dst->j, j, board_size);
