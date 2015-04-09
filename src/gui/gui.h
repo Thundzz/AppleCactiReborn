@@ -4,6 +4,7 @@
 enum{GUI_OK, GUI_ERROR = -1};
 
 int gui_init();
+void gui_draw();
 int gui_player_uses_joker(joker_t *joker, player_id player);
 int gui_get_move(move_t * move, player_id player);
 int gui_wannaplayagain();

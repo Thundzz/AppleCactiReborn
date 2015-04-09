@@ -8,3 +8,7 @@
 #define INVALID_PLAYER_TYPE "Failed to init a player of type %d.\n"
 #define ERROR_YOUDONWANNANO "Something went wrong."
 #define INVALID_MOVE "A player tried to play a forbidden move."
+#define APPLE_TURN "Apples are playing..."
+#define CACTI_TURN "Cacti are playing..."
+#define ERROR_TURN "Error : unknkown player is playing..."
+#define TURN_KEYS "Please press a directionnal key to chose your move."

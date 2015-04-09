@@ -8,3 +8,7 @@
 #define INVALID_PLAYER_TYPE "Echec de la création d'un joueur de type %d.\n"
 #define ERROR_YOUDONWANNANO "Erreur inopinée."
 #define INVALID_MOVE "Un joueur a tenté de jouer un coup interdit."
+#define APPLE_TURN "Tour des pommes..."
+#define CACTI_TURN "Tour des cactus..."
+#define ERROR_TURN "Erreur : Tour d'un joueur inconnu..."
+#define TURN_KEYS "Veuillez choisir une direction au moyen du pavé directionnel"

@@ -49,7 +49,7 @@ int game_start(){
 
 
 int game_over (){
-  return 1;
+  return random_int(10) > 7;
 }
 
 void invalid_move()
@@ -72,7 +72,7 @@ void destroy_empty_edges()
 	{
 	  for(; !cursor.j.end(&cursor.j) && destroy_line; cursor.j.next(&cursor.j))
 	    {
-	      if(tile_destroyable(&game.board[i][j]))
+	      if(!tile_destroyable(&game.board[i][j]))
 		destroy_line = 0;
 	    }
 	  for(; !cursor.j.end(&cursor.j); cursor.j.next(&cursor.j))

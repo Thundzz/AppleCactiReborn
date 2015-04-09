@@ -19,6 +19,7 @@ int main(int argc, char*argv[])
     {
       printf("starting a new game\n");
       game_start();
+      gui_draw();
       while(!game_over())
 	{
 	  printf("in main loop\n");
@@ -26,6 +27,7 @@ int main(int argc, char*argv[])
 	    game_use_joker(&joker);
 	  player_get_move(player_current(), &move);
 	  game_play_move(&move);
+	  gui_draw();
 	  player_next();
 	}
       printf("game ended\n");

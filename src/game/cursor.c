@@ -4,7 +4,7 @@
 #include "../texts.h"
 int cursor_1d_getnext_incr(cursor_1d_t *this)
 {
-  return *(this->i) - 1;
+  return *(this->i) + 1;
 }
 
 int cursor_1d_getnext_decr(cursor_1d_t *this)
@@ -55,14 +55,14 @@ void cursor_1d_common(cursor_1d_t *dst, int *i)
  dst->end = cursor_1d_end;
 }
 
-void cursor_1d_left(cursor_1d_t *dst, int *i, int board_size)
+void cursor_1d_right(cursor_1d_t *dst, int *i, int board_size)
 {
   cursor_1d_common(dst, i);
-  dst->_end = _end(board_size);
+  dst->_end = board_size;
   *(dst->i) = dst->_begin = _begin();
   dst->getnext = cursor_1d_getnext_incr;
 }
-void cursor_1d_right(cursor_1d_t *dst, int *i, int board_size)
+void cursor_1d_left(cursor_1d_t *dst, int *i, int board_size)
 {
   cursor_1d_common(dst, i);
   dst->_end = _rend();

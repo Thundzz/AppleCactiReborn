@@ -4,6 +4,7 @@
 #include "../common.h"
 #include "gui.h"
 #include "../game/game.h"
+#include "../game/player.h"
 #include "../texts.h"
 #define DEFAULT_W 800
 #define DEFAULT_H 600
@@ -35,6 +36,7 @@ typedef struct gui_s
     SDL_Surface *joker[NB_JOKER];} img;
   struct{TTF_Font *font; SDL_Color color;} text;
   struct{SDL_Surface * msg; SDL_Surface *status;} info;
+  struct{direction_t movedir;} event_handling;
 } gui_t;
 
 static gui_t gui;
@@ -65,6 +67,7 @@ void gui_draw_board()
 void gui_draw()
 {
   gui_draw_board();
+  gui_info(NULL);
   SDL_Flip(gui.screen);
 }
 
@@ -148,11 +151,57 @@ int gui_init()
 
 int gui_player_uses_joker(joker_t * joker, player_id player)
 {
-  return GUI_OK;
+
+  SDL_Event event;
+  switch(current_player_pawn())
+    {
+    case APPLE:
+      gui_info(APPLE_TURN);
+      break;
+    case CACTUS:
+      gui_info(CACTI_TURN);
+      break;
+    default:
+      gui_info(ERROR_TURN);
+    }
+  for(;;)
+    {
+      SDL_WaitEvent(&event);
+      switch(event.type)
+	{
+	case SDL_QUIT:
+	  return 0;
+	  break;
+	case SDL_KEYDOWN:
+	  switch(event.key.keysym.sym)
+	    {
+	    case SDLK_UP:
+	      gui.event_handling.movedir = UP;
+	      return 0;
+	      break;
+	    case SDLK_DOWN:
+	      gui.event_handling.movedir = DOWN;
+	      return 0;
+	      break;
+	    case SDLK_RIGHT:
+	      gui.event_handling.movedir = RIGHT;
+	      return 0;
+	      break;
+	    case SDLK_LEFT:
+	      gui.event_handling.movedir = LEFT;
+	      return 0;
+	      break;
+	    default:
+	      gui_info(TURN_KEYS);
+	    }
+	}
+    }
+  return 0;
 }
 
 int gui_get_move(move_t * move, player_id player)
 {
+  move->direction = gui.event_handling.movedir;;
   return GUI_OK;
 }
 
