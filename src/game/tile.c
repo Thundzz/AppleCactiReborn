@@ -60,6 +60,7 @@ tile_content_t tile_move_in(tile_t *t, tile_content_t content)
     }
   else
     {
+      leaving = EMPTY;
       ;//animation : content falls in the distorted void
     }
   return leaving;
@@ -79,15 +80,14 @@ int tile_set_trap(tile_t *t)
 
 tile_content_t tile_get_content(tile_t *t)
 {
-  if(t->exists)
       return t->content;
-  else
-    return EMPTY;
 }
 void tile_set_content(tile_t *t, tile_content_t content)
 {
-  if(t->exists) // a rather pointless check
-    t->content = content;
+  if(t->exists)
+    {
+      t->content = content;
+    }
 }
 void tile_destroy(tile_t *t)
 {
