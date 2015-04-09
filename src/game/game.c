@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "../common.h"
 #include "../texts.h"
 #include "player.h"
@@ -14,11 +16,34 @@ game_t * game_get()
 }
 int game_init(){
   joker_init();
+  srand(time(NULL));
   return 0;
 }
 
+int random_int(int max)
+{
+  int retval = (((double)rand())/RAND_MAX*(max+1));
+  if (retval > max) // sooo unlikely
+    return max;
+  return retval;
+}
 
 int game_start(){
+  game.board_size = BOARD_SIZE;
+  int nb_free_cells = BOARD_SIZE * BOARD_SIZE;
+  int nb_free_cacti = nb_free_cells/2;
+  for(; nb_free_cells--;)
+    {
+      int i = nb_free_cells / BOARD_SIZE;
+      int j = nb_free_cells % BOARD_SIZE;
+      if(random_int(nb_free_cells) > nb_free_cacti)
+	tile_init(&game.board[i][j], APPLE);
+      else
+	{
+	  tile_init(&game.board[i][j], CACTUS);
+	  --nb_free_cacti;
+	}
+    }
   return 0;
 }
 
