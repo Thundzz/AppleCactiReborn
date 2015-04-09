@@ -26,12 +26,6 @@ int tile_destroyable(tile_t *t)
     }
 }
 
-int tile_can_move_in(tile_t *t)
-{
-  // i'm considering  the creation of a joker that might make some tiles inaccessible.
-  (void) t; // avoid unused parameter warning
-  return 1;
-}
 
 /* returns whatever is pushed out 
  * EMPTY moving in has no effect and pushes EMPTY out */
@@ -40,12 +34,20 @@ tile_content_t tile_move_in(tile_t *t, tile_content_t content)
   tile_content_t leaving;
   if(t->exists)
     {
-      switch(content)
+      switch(t->content)
 	{
 	case APPLE:
 	case CACTUS:
-	  leaving = content;
-	  t->content = content;
+	  switch(content)
+	    {
+	    case APPLE:
+	    case CACTUS:
+	      leaving = t->content;
+	      t->content = content;
+	      break;
+	    default:
+	      break;
+	    }
 	  break;
 	case TRAP:
 	  tile_destroy(t);

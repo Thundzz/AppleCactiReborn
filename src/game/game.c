@@ -7,7 +7,7 @@
 #include "game.h"
 #include "cursor.h"
 #include "joker.h"
-
+#include <unistd.h>
 static game_t game;
 
 game_t * game_get()
@@ -49,6 +49,8 @@ int game_start(){
 
 
 int game_over (){
+  static int i = 0;
+  return !(++i % 9);
   return random_int(10) > 7;
 }
 
@@ -75,8 +77,9 @@ void destroy_empty_edges()
 	      if(!tile_destroyable(&game.board[i][j]))
 		destroy_line = 0;
 	    }
-	  for(; !cursor.j.end(&cursor.j); cursor.j.next(&cursor.j))
-	    tile_destroy(&game.board[i][j]);
+	  if(destroy_line)
+	    for(; !cursor.j.end(&cursor.j); cursor.j.next(&cursor.j))
+	      tile_destroy(&game.board[i][j]);
 	}
     }
 }
@@ -100,11 +103,13 @@ int game_play_move(move_t * move){
 	  tile_t *current = &game.board[i][j];
 	  if(tile_get_content(current) == moving)
 	    {
-	      tile_set_content(current, tmp[j]);
-	      tmp[j] = moving;
+	      tile_set_content(current, tmp[*(cursor.j.i)]);
+	      tmp[*(cursor.j.i)] = moving;
 	    }
 	  else
-	    tmp[j] = tile_move_in(current, tmp[j]);
+	    {
+	      tmp[*(cursor.j.i)] = tile_move_in(current, tmp[*(cursor.j.i)]);
+	    }
 	}
     }
   destroy_empty_edges();
