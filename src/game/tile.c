@@ -90,7 +90,7 @@ void tile_set_content(tile_t *t, tile_content_t content)
 void tile_destroy(tile_t *t)
 {
   t->exists = 0;
-  t->content = EMPTY;
+  t->content = VOID;
   ; //animation : tile falls
 }
 

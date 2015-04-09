@@ -16,6 +16,7 @@ typedef enum{
   EMPTY,
   APPLE,
   CACTUS,
+  VOID,
   TRAP,
   NB_TILE_CONTENT
 } tile_content_t;

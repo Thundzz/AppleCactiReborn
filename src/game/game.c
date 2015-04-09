@@ -98,12 +98,13 @@ int game_play_move(move_t * move){
       for(; !cursor.j.end(&cursor.j); cursor.j.next(&cursor.j))
 	{
 	  tile_t *current = &game.board[i][j];
-	  tmp[j] = tile_move_in(current, tmp[j]);
 	  if(tile_get_content(current) == moving)
 	    {
+	      tile_set_content(current, tmp[j]);
 	      tmp[j] = moving;
-	      tile_set_content(current, EMPTY);
 	    }
+	  else
+	    tmp[j] = tile_move_in(current, tmp[j]);
 	}
     }
   destroy_empty_edges();

@@ -56,7 +56,8 @@ void gui_draw_board()
       pos.y = 0;
       for(int j=0; j<BOARD_SIZE; ++j)
 	{
-	  SDL_BlitSurface(gui.img.tile[tile_get_content(&(game->board)[i][j])], NULL, gui.board, &pos);
+	  tile_t *t = &(game->board)[i][j];
+	  SDL_BlitSurface(gui.img.tile[tile_get_content(t)], NULL, gui.board, &pos);
 	  pos.y += gui.img.tile[0]->h + 1;
 	}
       pos.x += gui.img.tile[0]->w + 1;
