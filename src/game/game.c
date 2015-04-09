@@ -42,7 +42,7 @@ void destroy_empty_edges()
       int i, j;
       cursor_t cursor;
       int destroy_line = 1;
-      cursor_new(&cursor, direction, &i, &j, board.size);
+      cursor_new(&cursor, direction, &i, &j, game.board_size);
       for(; !cursor.i.end(&cursor.i) && destroy_line; cursor.i.next(&cursor.i))
 	{
 	  for(; !cursor.j.end(&cursor.j) && destroy_line; cursor.j.next(&cursor.j))
@@ -67,7 +67,7 @@ int game_play_move(move_t * move){
   tile_content_t tmp[BOARD_SIZE];
   for(int k = 0; k < BOARD_SIZE; ++k)
     tmp[k] = EMPTY;
-  cursor_new(&cursor, move->direction, &i, &j, board.size);
+  cursor_new(&cursor, move->direction, &i, &j, game.board_size);
   for(; !cursor.i.end(&cursor.i); cursor.i.next(&cursor.i))
     {
       for(; !cursor.j.end(&cursor.j); cursor.j.next(&cursor.j))

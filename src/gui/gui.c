@@ -159,7 +159,7 @@ int gui_get_move(move_t * move, player_id player)
 /*returns a boolean. change should be considered: this blocks error handling.*/
 int gui_wannaplayagain()
 {
-  gui_info("Play again ? (Y/n)\n");
+  gui_info(PLAY_AGAIN);
   SDL_Event event;
   for(;;)
     {
