@@ -150,10 +150,74 @@ int gui_init()
   return GUI_OK;
 }
 
+/* a wrapper for event recuperation.
+ * game-quitting events are intercepted here
+ * and if so gui_get_event returns GUI_QUIT.
+ */
+static int gui_get_event(SDL_Event *event)
+{
+  SDL_WaitEvent(event);
+  switch(event->type)
+    {
+    case SDL_QUIT:
+      return GUI_QUIT;
+    case SDL_KEYDOWN:
+      switch(event->key.keysym.sym)
+	{
+	case SDLK_q:
+	case SDLK_ESCAPE:
+	  return GUI_QUIT;
+	default:
+	  break;
+	}
+    }
+  return GUI_OK;
+}
+
+static int gui_get_key(int *idst, int nb_keys, SDLKey *keys, char * helpmsg)
+{
+  int nok = 1;
+  SDL_Event event;
+  for(;;)
+    {
+      do
+	{
+	  switch(gui_get_event(&event))
+	    {
+	    case GUI_QUIT:
+	      return GUI_QUIT;
+	      break;
+	    case GUI_ERROR:
+	      return GUI_ERROR;
+	    case GUI_OK:
+	    default:
+	      break;
+	    }
+	} while(event.type != SDL_KEYDOWN);
+      for(int i = 0; i < nb_keys; ++i)
+	{
+	  if(keys[i] == event.key.keysym.sym)
+	    {
+	      nok = 0;
+	      *idst = i;
+	      return GUI_OK;
+	    }
+	}
+      if(nok)
+	gui_info(helpmsg);
+    }
+  // the loop should only stop by returning after one of the keys
+  // was striked or quit resquested
+  return GUI_ERROR; 
+}
+
+
 int gui_player_uses_joker(joker_t * joker, player_id player)
 {
-
-  SDL_Event event;
+  SDLKey keys[] = {SDLK_UP, SDLK_DOWN, SDLK_RIGHT, SDLK_LEFT};
+  direction_t directions[] = {UP, DOWN, RIGHT, LEFT};
+  int nkeys = sizeof(keys)/sizeof(SDLKey);
+  int choice;
   switch(current_player_pawn())
     {
     case APPLE:
@@ -165,39 +229,10 @@ int gui_player_uses_joker(joker_t * joker, player_id player)
     default:
       gui_info(ERROR_TURN);
     }
-  for(;;)
-    {
-      SDL_WaitEvent(&event);
-      switch(event.type)
-	{
-	case SDL_QUIT:
-	  return 0;
-	  break;
-	case SDL_KEYDOWN:
-	  switch(event.key.keysym.sym)
-	    {
-	    case SDLK_UP:
-	      gui.event_handling.movedir = UP;
-	      return 0;
-	      break;
-	    case SDLK_DOWN:
-	      gui.event_handling.movedir = DOWN;
-	      return 0;
-	      break;
-	    case SDLK_RIGHT:
-	      gui.event_handling.movedir = RIGHT;
-	      return 0;
-	      break;
-	    case SDLK_LEFT:
-	      gui.event_handling.movedir = LEFT;
-	      return 0;
-	      break;
-	    default:
-	      gui_info(TURN_KEYS);
-	    }
-	}
-    }
-  return 0;
+  if(gui_get_key(&choice, nkeys, keys, TURN_KEYS) == GUI_QUIT)
+    return GUI_QUIT;
+  gui.event_handling.movedir = directions[choice];
+  return GUI_NOK; // no joker used
 }
 
 int gui_get_move(move_t * move, player_id player)

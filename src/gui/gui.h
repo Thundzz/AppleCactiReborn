@@ -1,7 +1,7 @@
 #ifndef _GUI_H_
 #define _GUI_H_
 
-enum{GUI_OK, GUI_ERROR = -1};
+enum{GUI_OK, GUI_NOK, GUI_QUIT, GUI_ERROR = -1};
 
 int gui_init();
 void gui_draw();

@@ -10,7 +10,7 @@ int main(int argc, char*argv[])
   move_t move;
   joker_t joker;
   int quit = 0;
-
+  int gui_return = GUI_OK;
   /* initialisation */
   game_init();
   gui_init();
@@ -23,18 +23,30 @@ int main(int argc, char*argv[])
       while(!game_over())
 	{
 	  printf("in main loop\n");
-	  while(player_uses_joker(player_current(), &joker))
+	  while((gui_return = player_uses_joker(player_current(), &joker)) == GUI_OK)
 	    game_use_joker(&joker);
-	  player_get_move(player_current(), &move);
+	  if(gui_return == GUI_QUIT)
+	    {
+	      quit = 1;
+	      break;
+	    }
+	  gui_return = player_get_move(player_current(), &move);
+	  if(gui_return == GUI_QUIT)
+	    {
+	      quit = 1;
+	      break;
+	    }
 	  game_play_move(&move);
 	  gui_draw();
 	  player_next();
 	}
       printf("game ended\n");
-      quit = !gui_wannaplayagain();
+      if(!quit)
+	quit = !gui_wannaplayagain();
     }
 
   /* freeing resources */
+ CLOSURE:
   gui_quit();
   game_quit();
 
