@@ -311,8 +311,10 @@ int gui_quit()
     SDL_FreeSurface(gui.info.msg);
   if(gui.info.msg != NULL)
     SDL_FreeSurface(gui.info.status);
+  SDL_FreeSurface(gui.board);
   TTF_CloseFont(gui.text.font);
   TTF_Quit();
+  SDL_FreeSurface(gui.screen);
   SDL_Quit();
   return GUI_OK;
 }
