@@ -1,0 +1,20 @@
+* TODO [#A] Release 0
+** DONE basic game rules
+** TODO [#B] game end detection
+*** TODO count apples and cacti on the field
+*** TODO after a move, check for end of game
+** TODO [#A] jokers
+** TODO [#B] display
+*** DONE board display
+*** DONE message display
+*** TODO [#C] animations
+**** TODO provide code for animation display
+**** TODO rework graphics
+** TODO [#C] Network
+*** TODO Network-player
+*** TODO server/client separation
+
+* TODO [#B] Extension
+** TODO concept-research
+** TODO code extension
+** TODO animations
