@@ -1,6 +1,12 @@
 #include "../common.h"
 #include "game.h"
+#include "game_internal.h"
 #include "tile.h"
+
+int tile_contains_pawn(tile_t *t)
+{
+  return (t->content == APPLE || t->content == CACTUS);
+}
 
 void tile_init(tile_t *t, tile_content_t content)
 {
@@ -61,6 +67,7 @@ tile_content_t tile_move_in(tile_t *t, tile_content_t content)
     }
   else
     {
+      game_one_pawn_down(content);
       ;//animation : content falls in the distorted void
     }
   return leaving;
@@ -82,6 +89,8 @@ tile_content_t tile_get_content(tile_t *t)
 {
       return t->content;
 }
+
+//the caller should apply himself any pawn count modification caused by this call
 void tile_set_content(tile_t *t, tile_content_t content)
 {
   if(t->exists)
@@ -93,6 +102,8 @@ void tile_destroy(tile_t *t)
 {
   t->exists = 0;
   t->content = VOID;
+  if(tile_contains_pawn(t))
+    game_one_pawn_down(t->content);
   ; //animation : tile falls
 }
 

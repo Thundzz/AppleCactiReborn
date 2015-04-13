@@ -7,14 +7,14 @@
    order to prevent the compiler from whining.
    TODO: Fill them with real content. 
 */
-#define BOARD_SIZE 8
-
 
 /*game data to be communicated to other modules (e.g. gui)*/
 typedef struct game_s
 {
   int board_size;
   tile_t board[BOARD_SIZE][BOARD_SIZE];
+  int pawn_count[NB_PLAYER];
+  int started;
 } game_t;
 
 int game_init();

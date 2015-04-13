@@ -1,8 +1,8 @@
 * TODO [#A] Release 0
 ** DONE basic game rules
-** TODO [#B] game end detection
-*** TODO count apples and cacti on the field
-*** TODO after a move, check for end of game
+** DONE [#A] game end detection
+*** DONE count apples and cacti on the field
+*** DONE after a move, check for end of game
 ** TODO [#A] jokers
 ** TODO [#B] display
 *** DONE board display

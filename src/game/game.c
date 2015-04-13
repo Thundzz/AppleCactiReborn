@@ -5,8 +5,10 @@
 #include "../texts.h"
 #include "player.h"
 #include "game.h"
+#include "game_internal.h"
 #include "cursor.h"
 #include "joker.h"
+
 static game_t game;
 
 game_t * game_get()
@@ -16,6 +18,7 @@ game_t * game_get()
 int game_init(){
   joker_init();
   srand(time(NULL));
+  game.started = 0;
   return 0;
 }
 
@@ -30,12 +33,14 @@ int random_int(int max)
 int game_start(){
   game.board_size = BOARD_SIZE;
   int nb_free_cells = BOARD_SIZE * BOARD_SIZE;
+  for(int i = 0; i < NB_PLAYER; ++i)
+    game.pawn_count[i] = nb_free_cells/2;
   int nb_free_cacti = nb_free_cells/2;
   for(; nb_free_cells--;)
     {
       int i = nb_free_cells / BOARD_SIZE;
       int j = nb_free_cells % BOARD_SIZE;
-      if(random_int(nb_free_cells) > nb_free_cacti)
+      if(random_int(nb_free_cells) >= nb_free_cacti)
 	tile_init(&game.board[i][j], APPLE);
       else
 	{
@@ -48,9 +53,13 @@ int game_start(){
 
 
 int game_over (){
-  static int i = 0;
-  return !(++i % 19);
-  return random_int(10) > 7;
+  int nonzero = 0;
+  for(int player = 0; player < NB_PLAYER; player++)
+    {
+      if(game.pawn_count[player] > 0)
+	nonzero++;
+    }
+  return nonzero <= 1;
 }
 
 void invalid_move()
@@ -89,6 +98,19 @@ int game_use_joker(joker_t * j){
   return joker_handle(j, &game);
 }
 
+int game_one_pawn_down(tile_content_t pawn)
+{
+  switch(pawn)
+    {
+    case APPLE:
+    case CACTUS:
+      game.pawn_count[pawn-1]--;
+      break;
+    default:
+      break;
+    }
+}
+
 int game_play_move(move_t * move){
   cursor_t cursor;
   int i, j;
@@ -113,6 +135,8 @@ int game_play_move(move_t * move){
 	    }
 	}
     }
+  for(int k = 0; k < BOARD_SIZE; ++k)
+    game_one_pawn_down(tmp[k]);
   destroy_empty_edges();
   return 0;
 }
