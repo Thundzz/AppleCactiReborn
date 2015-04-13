@@ -31,7 +31,7 @@ int tile_destroyable(tile_t *t)
  * EMPTY moving in has no effect and pushes EMPTY out */
 tile_content_t tile_move_in(tile_t *t, tile_content_t content)
 {
-  tile_content_t leaving;
+  tile_content_t leaving = EMPTY;
   if(t->exists)
     {
       switch(t->content)
@@ -53,14 +53,14 @@ tile_content_t tile_move_in(tile_t *t, tile_content_t content)
 	  tile_destroy(t);
 	  tile_move_in(t, content);
 	  // no break : TRAP and default share following operation(s)
+	case EMPTY:
+	  t->content = content;
 	default:
-	  leaving = EMPTY;
 	  break;
 	}
     }
   else
     {
-      leaving = EMPTY;
       ;//animation : content falls in the distorted void
     }
   return leaving;
