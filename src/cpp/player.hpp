@@ -15,7 +15,7 @@ class network_player_c : public player_c
 {
 public:
   network_player_c(player_id_t id);
-  virtual decision_t make_decision(game_state *state);
+  virtual decision_t make_decision(game_state_t *state);
   virtual player_id_t get_id();
   ~network_player_c();
 }
